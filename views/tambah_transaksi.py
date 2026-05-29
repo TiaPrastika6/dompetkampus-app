@@ -31,7 +31,6 @@ def show_tambah_transaksi():
     st.markdown(
         """
         <div class="page-heading">
-            <span class="page-label">Form Transaksi</span>
             <h1>➕ Tambah Transaksi</h1>
             <p>Catat pemasukan dan pengeluaran harian agar keuangan mahasiswa lebih terkontrol.</p>
         </div>

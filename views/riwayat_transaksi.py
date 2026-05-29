@@ -12,7 +12,6 @@ def show_riwayat_transaksi():
     st.markdown(
         """
         <div class="page-heading">
-            <span class="page-label">Riwayat Keuangan</span>
             <h1>📋 Riwayat Transaksi</h1>
             <p>Lihat, filter, dan hapus transaksi pemasukan maupun pengeluaran yang sudah dicatat.</p>
         </div>

@@ -6,13 +6,35 @@ from helpers import format_rupiah
 from components import metric_card
 
 
+NAMA_BULAN = {
+    "01": "Januari",
+    "02": "Februari",
+    "03": "Maret",
+    "04": "April",
+    "05": "Mei",
+    "06": "Juni",
+    "07": "Juli",
+    "08": "Agustus",
+    "09": "September",
+    "10": "Oktober",
+    "11": "November",
+    "12": "Desember",
+}
+
+
+def format_bulan(nilai_bulan):
+    tahun, bulan = nilai_bulan.split("-")
+    return f"{NAMA_BULAN[bulan]} {tahun}"
+
+
 def show_dashboard():
     st.markdown(
         """
-        <div class="page-heading">
-            <span class="page-label">Dashboard</span>
-            <h1>📊 Dashboard Keuangan</h1>
-            <p>Pantau saldo, pemasukan, pengeluaran, dan kategori transaksi dalam satu halaman.</p>
+        <div class="dashboard-title-card">
+            <div>
+                <h1>📊 Dashboard Keuangan</h1>
+                <p>Pantau pemasukan, pengeluaran, saldo, dan transaksi terbaru dalam satu halaman.</p>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -38,9 +60,23 @@ def show_dashboard():
 
     daftar_bulan = sorted(df["bulan"].dropna().unique(), reverse=True)
 
+    st.markdown(
+        """
+        <div class="periode-header">
+            <div>
+                <h3>📅 Periode Laporan</h3>
+                <p>Pilih bulan untuk melihat ringkasan keuangan.</p>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     bulan_dipilih = st.selectbox(
         "Pilih bulan",
-        daftar_bulan
+        daftar_bulan,
+        format_func=format_bulan,
+        label_visibility="collapsed"
     )
 
     df_filter = df[df["bulan"] == bulan_dipilih]
@@ -49,6 +85,8 @@ def show_dashboard():
     total_pengeluaran = df_filter[df_filter["jenis"] == "Pengeluaran"]["nominal"].sum()
     saldo = total_pemasukan - total_pengeluaran
 
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -56,7 +94,7 @@ def show_dashboard():
             "Total Pemasukan",
             format_rupiah(total_pemasukan),
             "💰",
-            "Jumlah uang masuk pada bulan yang dipilih."
+            "Uang masuk bulan ini."
         )
 
     with col2:
@@ -64,7 +102,7 @@ def show_dashboard():
             "Total Pengeluaran",
             format_rupiah(total_pengeluaran),
             "🛍️",
-            "Jumlah uang keluar untuk kebutuhan mahasiswa."
+            "Uang keluar bulan ini."
         )
 
     with col3:
@@ -72,44 +110,48 @@ def show_dashboard():
             "Saldo Akhir",
             format_rupiah(saldo),
             "✨",
-            "Sisa uang setelah dikurangi pengeluaran."
+            "Sisa uang bulan ini."
         )
-
-    st.write("")
 
     if saldo < 0:
         status_text = "Pengeluaran kamu lebih besar dari pemasukan. Coba cek lagi kategori yang paling banyak menghabiskan uang."
         status_class = "status-danger"
+        status_icon = "⚠️"
     elif saldo == 0:
         status_text = "Saldo kamu pas-pasan bulan ini. Usahakan sisakan sedikit untuk kebutuhan mendadak."
         status_class = "status-warning"
+        status_icon = "🟡"
     else:
         status_text = "Saldo kamu masih aman. Pertahankan kebiasaan mencatat transaksi."
         status_class = "status-safe"
+        status_icon = "✅"
 
     st.markdown(
         f"""
         <div class="status-card {status_class}">
-            <h3>Catatan Bulan Ini</h3>
+            <h3>{status_icon} Catatan Bulan Ini</h3>
             <p>{status_text}</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    col_grafik, col_ringkasan = st.columns([1.8, 1])
+    df_pengeluaran = df_filter[df_filter["jenis"] == "Pengeluaran"]
+    jumlah_transaksi = len(df_filter)
+    transaksi_pemasukan = len(df_filter[df_filter["jenis"] == "Pemasukan"])
+    transaksi_pengeluaran = len(df_filter[df_filter["jenis"] == "Pengeluaran"])
 
-    with col_grafik:
+    col_chart, col_summary = st.columns([1.7, 1])
+
+    with col_chart:
         st.markdown("### 📌 Pengeluaran per Kategori")
-
-        df_pengeluaran = df_filter[df_filter["jenis"] == "Pengeluaran"]
 
         if len(df_pengeluaran) == 0:
             st.markdown(
                 """
-                <div class="empty-chart">
+                <div class="soft-empty-card">
                     <h3>Belum ada pengeluaran</h3>
-                    <p>Kalau nanti kamu mencatat pengeluaran, grafik kategori akan muncul di sini.</p>
+                    <p>Kalau nanti kamu mencatat pengeluaran, grafik kategori akan muncul di bagian ini.</p>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -123,52 +165,56 @@ def show_dashboard():
             )
 
             chart = alt.Chart(df_kategori).mark_bar(
-                cornerRadiusTopLeft=10,
-                cornerRadiusTopRight=10,
+                cornerRadiusTopLeft=12,
+                cornerRadiusTopRight=12,
                 color="#FF9F1C"
             ).encode(
                 x=alt.X("kategori:N", title=None, sort="-y"),
-                y=alt.Y("nominal:Q", title="Nominal"),
+                y=alt.Y("nominal:Q", title=None),
                 tooltip=[
                     alt.Tooltip("kategori:N", title="Kategori"),
                     alt.Tooltip("nominal:Q", title="Nominal", format=",.0f")
                 ]
             ).properties(
-                height=330
+                height=280
             ).configure_view(
                 strokeWidth=0
+            ).configure_axis(
+                labelColor="#6E4E1C",
+                titleColor="#6E4E1C",
+                gridColor="#F5DCA4"
             )
 
             st.altair_chart(chart, use_container_width=True)
 
-    with col_ringkasan:
+    with col_summary:
         st.markdown("### 🧾 Ringkasan")
-
-        jumlah_transaksi = len(df_filter)
-        transaksi_pemasukan = len(df_filter[df_filter["jenis"] == "Pemasukan"])
-        transaksi_pengeluaran = len(df_filter[df_filter["jenis"] == "Pengeluaran"])
 
         st.markdown(
             f"""
-            <div class="summary-list">
-                <div>
+            <div class="summary-card">
+                <div class="summary-item">
                     <span>Jumlah transaksi</span>
                     <strong>{jumlah_transaksi}</strong>
                 </div>
-                <div>
-                    <span>Transaksi pemasukan</span>
+                <div class="summary-item">
+                    <span>Pemasukan</span>
                     <strong>{transaksi_pemasukan}</strong>
                 </div>
-                <div>
-                    <span>Transaksi pengeluaran</span>
+                <div class="summary-item">
+                    <span>Pengeluaran</span>
                     <strong>{transaksi_pengeluaran}</strong>
+                </div>
+                <div class="summary-item last">
+                    <span>Periode</span>
+                    <strong>{format_bulan(bulan_dipilih)}</strong>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    st.markdown("### Transaksi Terbaru")
+    st.markdown("### 🕒 Transaksi Terbaru")
 
     df_recent = df_filter.sort_values(by="tanggal", ascending=False).head(5)
 
@@ -177,6 +223,7 @@ def show_dashboard():
         jenis = row["jenis"]
         kategori = row["kategori"]
         nominal = format_rupiah(row["nominal"])
+        keterangan = row["keterangan"] if row["keterangan"] else "Tidak ada keterangan"
 
         if jenis == "Pemasukan":
             badge_class = "badge-income"
@@ -189,12 +236,12 @@ def show_dashboard():
 
         st.markdown(
             f"""
-            <div class="transaction-card compact-card">
+            <div class="transaction-card">
                 <div class="transaction-left">
                     <div class="transaction-icon">{icon}</div>
                     <div>
                         <h3>{kategori}</h3>
-                        <p>{tanggal}</p>
+                        <p>{tanggal} • {keterangan}</p>
                     </div>
                 </div>
                 <div class="transaction-right">
