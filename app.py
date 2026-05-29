@@ -19,17 +19,9 @@ if "data_keuangan" not in st.session_state:
     st.session_state.data_keuangan = load_data()
 
 
-st.markdown("""
-<div class="hero-card">
-    <p class="hero-title">💸 DompetKampus</p>
-    <p class="hero-subtitle">
-        Kelola pemasukan dan pengeluaran mahasiswa dengan tampilan sederhana, hangat, dan mudah dipahami.
-        Cocok untuk mencatat uang bulanan, makan, transportasi, tugas kuliah, kuota, dan kebutuhan harian.
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
-
+# =========================
+# SIDEBAR
+# =========================
 st.sidebar.markdown("## 💛 DompetKampus")
 st.sidebar.markdown("Kelola keuangan harian mahasiswa dengan lebih rapi.")
 
@@ -46,7 +38,20 @@ st.sidebar.info(
 )
 
 
+# =========================
+# ROUTING HALAMAN
+# =========================
 if menu == "Dashboard":
+    st.markdown("""
+    <div class="hero-card">
+        <p class="hero-title">💸 DompetKampus</p>
+        <p class="hero-subtitle">
+            Kelola pemasukan dan pengeluaran mahasiswa dengan tampilan sederhana, hangat, dan mudah dipahami.
+            Cocok untuk mencatat uang bulanan, makan, transportasi, tugas kuliah, kuota, dan kebutuhan harian.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
     show_dashboard()
 
 elif menu == "Tambah Transaksi":
@@ -56,6 +61,9 @@ elif menu == "Riwayat Transaksi":
     show_riwayat_transaksi()
 
 
+# =========================
+# FOOTER
+# =========================
 st.markdown(
     '<p class="footer-note">DompetKampus — aplikasi manajemen keuangan sederhana untuk mahasiswa.</p>',
     unsafe_allow_html=True
