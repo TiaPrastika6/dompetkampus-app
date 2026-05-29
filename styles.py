@@ -347,5 +347,264 @@ def load_css():
                 padding: 24px;
             }
         }
+
+        .page-heading {
+            margin-bottom: 24px;
+        }
+
+        .page-heading h1 {
+            font-size: 36px;
+            font-weight: 850;
+            color: #2F1D05;
+            margin: 8px 0 6px 0;
+            letter-spacing: -0.8px;
+        }
+
+        .page-heading p {
+            color: #75521A;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .page-label {
+            display: inline-block;
+            background: rgba(255, 159, 28, 0.16);
+            color: #B85C00 !important;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+            border: 1px solid rgba(255, 159, 28, 0.28);
+        }
+
+        .info-card {
+            padding: 22px 26px;
+            border-radius: 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 18px 38px rgba(181, 111, 32, 0.10);
+            border: 1px solid rgba(255, 190, 104, 0.42);
+        }
+
+        .info-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 22px;
+            color: #2F1D05;
+        }
+
+        .info-card p {
+            margin: 0;
+            color: #70501B;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        .income-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,241,199,0.92));
+        }
+
+        .expense-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,226,174,0.92));
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 850;
+            color: #2F1D05;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #3A2607;
+            margin-bottom: 10px;
+        }
+
+        .mini-stat-card {
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(255, 190, 104, 0.35);
+            border-radius: 22px;
+            padding: 20px 24px;
+            box-shadow: 0 14px 30px rgba(181, 111, 32, 0.10);
+            margin: 18px 0 22px 0;
+        }
+
+        .mini-stat-card p {
+            margin: 0;
+            color: #80591C;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .mini-stat-card h3 {
+            margin: 8px 0 0 0;
+            color: #2F1D05;
+            font-size: 26px;
+            font-weight: 850;
+        }
+
+        .transaction-card {
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 190, 104, 0.35);
+            border-radius: 24px;
+            padding: 18px 22px;
+            margin: 14px 0 8px 0;
+            box-shadow: 0 16px 35px rgba(181, 111, 32, 0.10);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .compact-card {
+            margin-top: 10px;
+        }
+
+        .transaction-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .transaction-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FFF1B8, #FFC46B);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .transaction-left h3,
+        .transaction-right h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 850;
+            color: #2F1D05;
+        }
+
+        .transaction-left p {
+            margin: 5px 0 0 0;
+            color: #7B5A22;
+            font-size: 14px;
+        }
+
+        .transaction-right {
+            text-align: right;
+        }
+
+        .transaction-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .badge-income {
+            background: #E9F8DF;
+            color: #2E7D32;
+        }
+
+        .badge-expense {
+            background: #FFE6D6;
+            color: #B45309;
+        }
+
+        .amount-income {
+            color: #2E7D32 !important;
+        }
+
+        .amount-expense {
+            color: #B45309 !important;
+        }
+
+        .status-card {
+            padding: 20px 24px;
+            border-radius: 24px;
+            margin: 20px 0 26px 0;
+            box-shadow: 0 14px 30px rgba(181, 111, 32, 0.10);
+        }
+
+        .status-card h3 {
+            margin: 0 0 6px 0;
+            font-size: 20px;
+            font-weight: 850;
+        }
+
+        .status-card p {
+            margin: 0;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .status-safe {
+            background: #EAF7DF;
+            border: 1px solid #CBE9B8;
+            color: #2E7D32;
+        }
+
+        .status-warning {
+            background: #FFF3CD;
+            border: 1px solid #FFE08A;
+            color: #8A5A00;
+        }
+
+        .status-danger {
+            background: #FFE1DC;
+            border: 1px solid #FFB9AD;
+            color: #A23A2A;
+        }
+
+        .empty-chart {
+            background: rgba(255, 241, 199, 0.7);
+            border: 1px dashed rgba(255, 159, 28, 0.5);
+            border-radius: 22px;
+            padding: 26px;
+            color: #75521A;
+        }
+
+        .empty-chart h3 {
+            margin: 0 0 8px 0;
+            color: #3A2607;
+        }
+
+        .empty-chart p {
+            margin: 0;
+        }
+
+        .summary-list {
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(255, 190, 104, 0.35);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 14px 30px rgba(181, 111, 32, 0.10);
+        }
+
+        .summary-list div {
+            display: flex;
+            justify-content: space-between;
+            padding: 13px 0;
+            border-bottom: 1px solid rgba(128, 89, 28, 0.12);
+        }
+
+        .summary-list div:last-child {
+            border-bottom: none;
+        }
+
+        .summary-list span {
+            color: #75521A;
+            font-size: 14px;
+        }
+
+        .summary-list strong {
+            color: #2F1D05;
+            font-size: 16px;
+        }
     </style>
     """, unsafe_allow_html=True)

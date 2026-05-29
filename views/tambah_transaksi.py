@@ -4,15 +4,36 @@ from datetime import date, datetime
 from data_handler import save_data
 
 
+KATEGORI_PEMASUKAN = [
+    "Uang Bulanan",
+    "Beasiswa",
+    "Kerja Part Time",
+    "Hadiah",
+    "Lainnya"
+]
+
+KATEGORI_PENGELUARAN = [
+    "Makan",
+    "Transportasi",
+    "Tugas/Kuliah",
+    "Kuota Internet",
+    "Kos",
+    "Hiburan",
+    "Belanja",
+    "Lainnya"
+]
+
+
 def show_tambah_transaksi():
+    if st.session_state.pop("transaksi_tersimpan", False):
+        st.toast("Transaksi berhasil disimpan.", icon="✅")
+
     st.markdown(
         """
         <div class="page-heading">
-            <div>
-                <p class="page-label">Form Transaksi</p>
-                <h1>➕ Tambah Transaksi</h1>
-                <p>Catat pemasukan dan pengeluaran harian agar keuangan mahasiswa lebih terkontrol.</p>
-            </div>
+            <span class="page-label">Form Transaksi</span>
+            <h1>➕ Tambah Transaksi</h1>
+            <p>Catat pemasukan dan pengeluaran harian agar keuangan mahasiswa lebih terkontrol.</p>
         </div>
         """,
         unsafe_allow_html=True
@@ -30,7 +51,7 @@ def show_tambah_transaksi():
             """
             <div class="info-card income-card">
                 <h3>💰 Pemasukan</h3>
-                <p>Gunakan bagian ini untuk mencatat uang bulanan, beasiswa, hadiah, atau penghasilan tambahan.</p>
+                <p>Catat uang bulanan, beasiswa, hadiah, atau penghasilan tambahan.</p>
             </div>
             """,
             unsafe_allow_html=True
@@ -40,13 +61,13 @@ def show_tambah_transaksi():
             """
             <div class="info-card expense-card">
                 <h3>🛍️ Pengeluaran</h3>
-                <p>Gunakan bagian ini untuk mencatat kebutuhan harian seperti makan, transportasi, kuota, kos, dan tugas kuliah.</p>
+                <p>Catat kebutuhan harian seperti makan, transportasi, kuota, kos, dan tugas kuliah.</p>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    with st.form("form_transaksi"):
+    with st.form("form_transaksi", clear_on_submit=True):
         st.markdown('<p class="form-title">Detail Transaksi</p>', unsafe_allow_html=True)
 
         col1, col2 = st.columns(2)
@@ -61,38 +82,26 @@ def show_tambah_transaksi():
             if jenis == "Pemasukan":
                 kategori = st.selectbox(
                     "Kategori pemasukan",
-                    ["Uang Bulanan", "Beasiswa", "Kerja Part Time", "Hadiah", "Lainnya"],
+                    KATEGORI_PEMASUKAN,
                     key="kategori_pemasukan"
                 )
             else:
                 kategori = st.selectbox(
                     "Kategori pengeluaran",
-                    [
-                        "Makan",
-                        "Transportasi",
-                        "Tugas/Kuliah",
-                        "Kuota Internet",
-                        "Kos",
-                        "Hiburan",
-                        "Belanja",
-                        "Lainnya"
-                    ],
+                    KATEGORI_PENGELUARAN,
                     key="kategori_pengeluaran"
                 )
 
         nominal = st.number_input(
             "Nominal",
             min_value=0,
-            step=1000,
-            placeholder="Masukkan nominal transaksi"
+            step=1000
         )
 
         keterangan = st.text_area(
             "Keterangan",
             placeholder="Contoh: beli makan siang, bayar print tugas, uang bulanan dari orang tua..."
         )
-
-        st.markdown('<div class="button-space"></div>', unsafe_allow_html=True)
 
         submit = st.form_submit_button("💾 Simpan Transaksi")
 
@@ -106,10 +115,11 @@ def show_tambah_transaksi():
                     "jenis": jenis,
                     "kategori": kategori,
                     "nominal": int(nominal),
-                    "keterangan": keterangan
+                    "keterangan": keterangan.strip()
                 }
 
                 st.session_state.data_keuangan.append(transaksi_baru)
                 save_data(st.session_state.data_keuangan)
 
-                st.success("Transaksi berhasil disimpan.")
+                st.session_state.transaksi_tersimpan = True
+                st.rerun()

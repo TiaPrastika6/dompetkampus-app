@@ -6,7 +6,19 @@ from helpers import format_rupiah
 
 
 def show_riwayat_transaksi():
-    st.markdown('<p class="section-title">📋 Riwayat Transaksi</p>', unsafe_allow_html=True)
+    if st.session_state.pop("hapus_berhasil", False):
+        st.toast("Transaksi berhasil dihapus.", icon="🗑️")
+
+    st.markdown(
+        """
+        <div class="page-heading">
+            <span class="page-label">Riwayat Keuangan</span>
+            <h1>📋 Riwayat Transaksi</h1>
+            <p>Lihat, filter, dan hapus transaksi pemasukan maupun pengeluaran yang sudah dicatat.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     data = st.session_state.data_keuangan
 
@@ -14,10 +26,8 @@ def show_riwayat_transaksi():
         st.markdown(
             """
             <div class="empty-card">
-                <h3>Belum ada riwayat transaksi</h3>
-                <p>
-                    Data pemasukan dan pengeluaran yang kamu tambahkan akan muncul di sini.
-                </p>
+                <h3>Belum ada transaksi</h3>
+                <p>Data pemasukan dan pengeluaran yang kamu tambahkan akan muncul di sini.</p>
             </div>
             """,
             unsafe_allow_html=True
@@ -25,7 +35,9 @@ def show_riwayat_transaksi():
         return
 
     df = pd.DataFrame(data)
-    df["tanggal"] = pd.to_datetime(df["tanggal"])
+    df["tanggal"] = pd.to_datetime(df["tanggal"], errors="coerce")
+
+    st.markdown('<div class="filter-title">Filter Transaksi</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
@@ -38,7 +50,7 @@ def show_riwayat_transaksi():
     with col2:
         filter_kategori = st.selectbox(
             "Filter kategori",
-            ["Semua"] + sorted(df["kategori"].unique().tolist())
+            ["Semua"] + sorted(df["kategori"].dropna().unique().tolist())
         )
 
     df_filter = df.copy()
@@ -49,43 +61,86 @@ def show_riwayat_transaksi():
     if filter_kategori != "Semua":
         df_filter = df_filter[df_filter["kategori"] == filter_kategori]
 
-    df_tampil = df_filter.sort_values(by="tanggal", ascending=False).copy()
-    df_tampil["tanggal"] = df_tampil["tanggal"].dt.strftime("%d-%m-%Y")
-    df_tampil["nominal"] = df_tampil["nominal"].apply(format_rupiah)
+    total_nominal = df_filter["nominal"].sum()
+    jumlah_transaksi = len(df_filter)
 
-    st.markdown("### Data Transaksi")
+    col_a, col_b = st.columns(2)
 
-    st.dataframe(
-        df_tampil[["tanggal", "jenis", "kategori", "nominal", "keterangan"]],
-        use_container_width=True,
-        hide_index=True
-    )
-
-    st.divider()
-
-    st.markdown("### 🗑️ Hapus Transaksi")
-
-    label_map = {}
-
-    for item in data:
-        label_map[item["id"]] = (
-            f"{item['tanggal']} | {item['jenis']} | "
-            f"{item['kategori']} | {format_rupiah(item['nominal'])} | "
-            f"{item['keterangan']}"
+    with col_a:
+        st.markdown(
+            f"""
+            <div class="mini-stat-card">
+                <p>Total Transaksi</p>
+                <h3>{jumlah_transaksi}</h3>
+            </div>
+            """,
+            unsafe_allow_html=True
         )
 
-    id_terpilih = st.selectbox(
-        "Pilih transaksi yang ingin dihapus",
-        options=list(label_map.keys()),
-        format_func=lambda x: label_map[x]
-    )
+    with col_b:
+        st.markdown(
+            f"""
+            <div class="mini-stat-card">
+                <p>Total Nominal Terfilter</p>
+                <h3>{format_rupiah(total_nominal)}</h3>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-    if st.button("Hapus Transaksi"):
-        st.session_state.data_keuangan = [
-            item for item in st.session_state.data_keuangan
-            if item["id"] != id_terpilih
-        ]
+    st.markdown("### Daftar Transaksi")
 
-        save_data(st.session_state.data_keuangan)
-        st.success("Transaksi berhasil dihapus.")
-        st.rerun()
+    if len(df_filter) == 0:
+        st.warning("Tidak ada transaksi yang sesuai dengan filter.")
+        return
+
+    df_filter = df_filter.sort_values(by="tanggal", ascending=False)
+
+    for _, row in df_filter.iterrows():
+        id_transaksi = row["id"]
+        tanggal = row["tanggal"].strftime("%d %B %Y") if pd.notnull(row["tanggal"]) else "-"
+        jenis = row["jenis"]
+        kategori = row["kategori"]
+        nominal = format_rupiah(row["nominal"])
+        keterangan = row["keterangan"] if row["keterangan"] else "Tidak ada keterangan"
+
+        if jenis == "Pemasukan":
+            badge_class = "badge-income"
+            amount_class = "amount-income"
+            icon = "💰"
+        else:
+            badge_class = "badge-expense"
+            amount_class = "amount-expense"
+            icon = "🛍️"
+
+        st.markdown(
+            f"""
+            <div class="transaction-card">
+                <div class="transaction-left">
+                    <div class="transaction-icon">{icon}</div>
+                    <div>
+                        <h3>{kategori}</h3>
+                        <p>{tanggal} • {keterangan}</p>
+                    </div>
+                </div>
+                <div class="transaction-right">
+                    <span class="transaction-badge {badge_class}">{jenis}</span>
+                    <h3 class="{amount_class}">{nominal}</h3>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        col_empty, col_delete = st.columns([5, 1])
+
+        with col_delete:
+            if st.button("Hapus", key=f"hapus_{id_transaksi}"):
+                st.session_state.data_keuangan = [
+                    item for item in st.session_state.data_keuangan
+                    if item["id"] != id_transaksi
+                ]
+
+                save_data(st.session_state.data_keuangan)
+                st.session_state.hapus_berhasil = True
+                st.rerun()
