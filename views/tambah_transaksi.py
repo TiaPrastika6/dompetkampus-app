@@ -24,101 +24,117 @@ KATEGORI_PENGELUARAN = [
 ]
 
 
-def show_tambah_transaksi():
-    if st.session_state.pop("transaksi_tersimpan", False):
-        st.toast("Transaksi berhasil disimpan.", icon="✅")
+def simpan_transaksi(jenis, tanggal, kategori, nominal, keterangan):
+    transaksi_baru = {
+        "id": datetime.now().strftime("%Y%m%d%H%M%S%f"),
+        "tanggal": str(tanggal),
+        "jenis": jenis,
+        "kategori": kategori,
+        "nominal": int(nominal),
+        "keterangan": keterangan.strip()
+    }
 
-    st.markdown(
-        """
-        <div class="page-heading">
-            <h1>➕ Tambah Transaksi</h1>
-            <p>Catat pemasukan dan pengeluaran harian agar keuangan mahasiswa lebih terkontrol.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.session_state.data_keuangan.append(transaksi_baru)
+    save_data(st.session_state.data_keuangan)
 
-    jenis = st.radio(
-        "Pilih jenis transaksi",
-        ["Pemasukan", "Pengeluaran"],
-        horizontal=True,
-        key="jenis_transaksi"
-    )
+    st.session_state.transaksi_tersimpan = True
+    st.rerun()
 
-    if jenis == "Pemasukan":
+
+def form_transaksi(jenis, kategori_list, form_title, form_desc, placeholder, button_label, form_key):
+    with st.form(form_key, clear_on_submit=True):
         st.markdown(
-            """
-            <div class="info-card income-card">
-                <h3>💰 Pemasukan</h3>
-                <p>Catat uang bulanan, beasiswa, hadiah, atau penghasilan tambahan.</p>
+            f"""
+            <div class="form-clean-header">
+                <h2>{form_title}</h2>
+                <p>{form_desc}</p>
             </div>
             """,
             unsafe_allow_html=True
         )
-    else:
-        st.markdown(
-            """
-            <div class="info-card expense-card">
-                <h3>🛍️ Pengeluaran</h3>
-                <p>Catat kebutuhan harian seperti makan, transportasi, kuota, kos, dan tugas kuliah.</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with st.form("form_transaksi", clear_on_submit=True):
-        st.markdown('<p class="form-title">Detail Transaksi</p>', unsafe_allow_html=True)
 
         col1, col2 = st.columns(2)
 
         with col1:
             tanggal = st.date_input(
                 "Tanggal transaksi",
-                value=date.today()
+                value=date.today(),
+                key=f"tanggal_{form_key}"
             )
 
         with col2:
-            if jenis == "Pemasukan":
-                kategori = st.selectbox(
-                    "Kategori pemasukan",
-                    KATEGORI_PEMASUKAN,
-                    key="kategori_pemasukan"
-                )
-            else:
-                kategori = st.selectbox(
-                    "Kategori pengeluaran",
-                    KATEGORI_PENGELUARAN,
-                    key="kategori_pengeluaran"
-                )
+            kategori = st.selectbox(
+                "Kategori transaksi",
+                kategori_list,
+                key=f"kategori_{form_key}"
+            )
 
         nominal = st.number_input(
-            "Nominal",
+            "Nominal transaksi",
             min_value=0,
-            step=1000
+            step=1000,
+            key=f"nominal_{form_key}"
         )
 
         keterangan = st.text_area(
-            "Keterangan",
-            placeholder="Contoh: beli makan siang, bayar print tugas, uang bulanan dari orang tua..."
+            "Keterangan transaksi",
+            placeholder=placeholder,
+            key=f"keterangan_{form_key}"
         )
 
-        submit = st.form_submit_button("💾 Simpan Transaksi")
+        submit = st.form_submit_button(button_label)
 
         if submit:
             if nominal <= 0:
-                st.error("Nominal harus lebih dari 0.")
+                st.error("Nominal transaksi harus lebih dari 0.")
             else:
-                transaksi_baru = {
-                    "id": datetime.now().strftime("%Y%m%d%H%M%S%f"),
-                    "tanggal": str(tanggal),
-                    "jenis": jenis,
-                    "kategori": kategori,
-                    "nominal": int(nominal),
-                    "keterangan": keterangan.strip()
-                }
+                simpan_transaksi(
+                    jenis,
+                    tanggal,
+                    kategori,
+                    nominal,
+                    keterangan
+                )
 
-                st.session_state.data_keuangan.append(transaksi_baru)
-                save_data(st.session_state.data_keuangan)
 
-                st.session_state.transaksi_tersimpan = True
-                st.rerun()
+def show_tambah_transaksi():
+    if st.session_state.pop("transaksi_tersimpan", False):
+        st.toast("Transaksi berhasil disimpan.", icon="✅")
+
+    st.markdown(
+        """
+        <div class="transaction-heading">
+            <p class="eyebrow">DompetKampus</p>
+            <h1>Tambah Transaksi</h1>
+            <p>Catat pemasukan dan pengeluaran harian dengan tampilan yang lebih rapi, simpel, dan nyaman digunakan.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    tab_pengeluaran, tab_pemasukan = st.tabs([
+        "🛍️ Pengeluaran",
+        "💰 Pemasukan"
+    ])
+
+    with tab_pengeluaran:
+        form_transaksi(
+            jenis="Pengeluaran",
+            kategori_list=KATEGORI_PENGELUARAN,
+            form_title="Detail Pengeluaran",
+            form_desc="Catat uang keluar seperti makan, transportasi, kos, kuota, atau kebutuhan kuliah.",
+            placeholder="Contoh: beli makan siang, bayar print tugas, beli kuota...",
+            button_label="💾 Simpan Pengeluaran",
+            form_key="form_pengeluaran"
+        )
+
+    with tab_pemasukan:
+        form_transaksi(
+            jenis="Pemasukan",
+            kategori_list=KATEGORI_PEMASUKAN,
+            form_title="Detail Pemasukan",
+            form_desc="Catat uang masuk seperti uang bulanan, beasiswa, hadiah, atau penghasilan tambahan.",
+            placeholder="Contoh: uang bulanan dari orang tua, beasiswa, hadiah...",
+            button_label="💾 Simpan Pemasukan",
+            form_key="form_pemasukan"
+        )

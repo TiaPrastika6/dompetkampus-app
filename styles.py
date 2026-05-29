@@ -10,9 +10,6 @@ def load_css():
             font-family: 'Inter', sans-serif;
         }
 
-        /* =========================
-           HILANGKAN HEADER STREAMLIT
-        ========================= */
         header[data-testid="stHeader"],
         [data-testid="stToolbar"],
         [data-testid="stDecoration"],
@@ -24,28 +21,33 @@ def load_css():
             visibility: hidden !important;
         }
 
-        /* =========================
-           BACKGROUND UTAMA
-        ========================= */
+        .stMarkdown h1 a,
+        .stMarkdown h2 a,
+        .stMarkdown h3 a,
+        a[href^="#"] {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
         .stApp {
             background:
-                radial-gradient(circle at top left, rgba(255, 196, 107, 0.38), transparent 30%),
-                radial-gradient(circle at top right, rgba(255, 232, 163, 0.55), transparent 28%),
-                linear-gradient(135deg, #FFF9EC 0%, #FFF3D6 45%, #FFE7B0 100%);
-            color: #332006;
+                radial-gradient(circle at top left, rgba(255, 198, 109, 0.18), transparent 32%),
+                radial-gradient(circle at top right, rgba(255, 228, 150, 0.38), transparent 30%),
+                linear-gradient(135deg, #FFF9EC 0%, #FFF4DA 48%, #FFEBC2 100%);
+            color: #2F1D05;
         }
 
         .block-container {
-            padding-top: 1.8rem;
+            padding-top: 2rem;
             padding-bottom: 3rem;
-            max-width: 1180px;
+            max-width: 1040px;
         }
 
         /* =========================
            SIDEBAR
         ========================= */
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #FFF2CC 0%, #FFE4A6 100%);
+            background: linear-gradient(180deg, #FFF3D3 0%, #FFE4A6 100%);
             border-right: 1px solid rgba(180, 105, 20, 0.12);
         }
 
@@ -54,8 +56,8 @@ def load_css():
         }
 
         section[data-testid="stSidebar"] .stRadio {
-            background: rgba(255, 255, 255, 0.55);
-            border: 1px solid rgba(255, 184, 77, 0.26);
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(255, 184, 77, 0.28);
             border-radius: 22px;
             padding: 16px 18px 10px 18px;
             box-shadow: 0 12px 28px rgba(181, 111, 32, 0.07);
@@ -64,6 +66,10 @@ def load_css():
         section[data-testid="stSidebar"] .stRadio label {
             font-size: 15px !important;
             font-weight: 650 !important;
+        }
+
+        section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+            line-height: 1.55;
         }
 
         /* =========================
@@ -99,21 +105,145 @@ def load_css():
         }
 
         /* =========================
-           HEADING HALAMAN
+           HALAMAN TAMBAH TRANSAKSI
         ========================= */
+        .transaction-heading {
+            padding-top: 6px;
+            margin-bottom: 26px;
+        }
+
+        .transaction-heading .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: rgba(255, 177, 59, 0.18);
+            border: 1px solid rgba(255, 177, 59, 0.35);
+            color: #B85C00;
+            font-size: 13px;
+            font-weight: 800;
+            margin: 0 0 14px 0;
+        }
+
+        .transaction-heading h1 {
+            font-size: 42px;
+            font-weight: 850;
+            color: #2F1D05;
+            margin: 0 0 12px 0;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .transaction-heading p {
+            color: #75521A;
+            font-size: 16px;
+            line-height: 1.75;
+            margin: 0;
+            max-width: 720px;
+        }
+
+        /* =========================
+           TAB TRANSAKSI
+        ========================= */
+        div[data-testid="stTabs"] {
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(255, 184, 77, 0.28);
+            border-radius: 30px;
+            padding: 20px 22px 26px 22px;
+            box-shadow: 0 20px 45px rgba(164, 97, 19, 0.10);
+            margin-top: 12px;
+        }
+
+        div[data-testid="stTabs"] [role="tablist"] {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        div[data-testid="stTabs"] button[data-baseweb="tab"] {
+            width: 100%;
+            height: 58px;
+            border-radius: 18px;
+            background: rgba(255, 253, 248, 0.88);
+            border: 1.5px solid rgba(255, 173, 72, 0.42);
+            box-shadow: 0 10px 22px rgba(180, 105, 20, 0.06);
+            color: #4B3109;
+            font-weight: 850;
+            justify-content: center;
+        }
+
+        div[data-testid="stTabs"] button[data-baseweb="tab"] p {
+            color: #4B3109 !important;
+            font-weight: 850 !important;
+            font-size: 15px !important;
+        }
+
+        div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] {
+            background: linear-gradient(135deg, #FFB13B, #FF9F1C);
+            border-color: rgba(255, 159, 28, 0.85);
+            box-shadow: 0 14px 28px rgba(255, 159, 28, 0.26);
+        }
+
+        div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] p {
+            color: #2F1D05 !important;
+        }
+
+        div[data-testid="stTabs"] [data-baseweb="tab-highlight"] {
+            display: none !important;
+        }
+
+        /* =========================
+           FORM TRANSAKSI
+        ========================= */
+        div[data-testid="stForm"] {
+            background:
+                radial-gradient(circle at top right, rgba(255, 209, 102, 0.13), transparent 35%),
+                rgba(255, 255, 255, 0.95);
+            padding: 34px 38px;
+            border-radius: 26px;
+            box-shadow: 0 24px 58px rgba(164, 97, 19, 0.13);
+            border: 1px solid rgba(255, 181, 77, 0.32);
+            margin-top: 6px;
+            margin-bottom: 6px;
+        }
+
+        .form-clean-header {
+            padding-bottom: 22px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(128, 89, 28, 0.12);
+        }
+
+        .form-clean-header h2 {
+            margin: 0 0 8px 0;
+            color: #2F1D05;
+            font-size: 26px;
+            font-weight: 850;
+            letter-spacing: -0.5px;
+        }
+
+        .form-clean-header p {
+            margin: 0;
+            color: #75521A;
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 760px;
+        }
+
         .page-heading {
             display: block !important;
             margin-bottom: 26px;
-            padding-top: 6px;
+            padding-top: 4px;
         }
 
         .page-heading h1 {
-            font-size: 38px;
+            font-size: 40px;
             font-weight: 850;
             color: #2F1D05;
-            margin: 0 0 10px 0;
-            letter-spacing: -0.8px;
-            line-height: 1.2;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.9px;
+            line-height: 1.15;
         }
 
         .page-heading p {
@@ -137,10 +267,97 @@ def load_css():
         }
 
         /* =========================
+           INPUT
+        ========================= */
+        label,
+        .stRadio label,
+        .stSelectbox label,
+        .stDateInput label,
+        .stNumberInput label,
+        .stTextArea label {
+            color: #4B3109 !important;
+            font-weight: 750 !important;
+            font-size: 15px !important;
+        }
+
+        div[data-baseweb="select"] > div,
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input,
+        div[data-testid="stDateInput"] input,
+        textarea {
+            background-color: #FFFDF8 !important;
+            color: #2F1D05 !important;
+            border-radius: 16px !important;
+            border: 1.5px solid rgba(255, 173, 72, 0.48) !important;
+            box-shadow: 0 8px 20px rgba(180, 105, 20, 0.045) !important;
+        }
+
+        div[data-baseweb="select"] > div {
+            min-height: 54px !important;
+        }
+
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input,
+        div[data-testid="stDateInput"] input {
+            min-height: 54px !important;
+        }
+
+        textarea {
+            min-height: 110px !important;
+        }
+
+        div[data-baseweb="select"] > div:hover,
+        div[data-testid="stTextInput"] input:hover,
+        div[data-testid="stNumberInput"] input:hover,
+        div[data-testid="stDateInput"] input:hover,
+        textarea:hover {
+            border-color: rgba(255, 159, 28, 0.9) !important;
+        }
+
+        div[data-baseweb="select"] span {
+            color: #2F1D05 !important;
+            font-weight: 650 !important;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #A98243 !important;
+        }
+
+        /* =========================
+           BUTTON
+        ========================= */
+        .stButton > button,
+        .stFormSubmitButton > button {
+            background: linear-gradient(135deg, #FFB13B, #FF9F1C);
+            color: #2F1D05;
+            border: none;
+            border-radius: 16px;
+            padding: 0.85rem 1.45rem;
+            font-weight: 850;
+            font-size: 16px;
+            box-shadow: 0 14px 28px rgba(255, 159, 28, 0.28);
+            transition: all 0.2s ease;
+        }
+
+        .stButton > button:hover,
+        .stFormSubmitButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 35px rgba(255, 159, 28, 0.36);
+            color: #2F1D05;
+            border: none;
+        }
+
+        .stFormSubmitButton > button {
+            min-width: 220px;
+            height: 56px;
+        }
+
+        /* =========================
            DASHBOARD
         ========================= */
         .dashboard-title-card {
-            background: rgba(255, 255, 255, 0.68);
+            background: rgba(255, 255, 255, 0.72);
             border: 1px solid rgba(255, 190, 104, 0.35);
             border-radius: 28px;
             padding: 28px 32px;
@@ -164,7 +381,7 @@ def load_css():
         }
 
         .periode-header {
-            background: linear-gradient(135deg, rgba(255,255,255,0.84), rgba(255,241,199,0.76));
+            background: linear-gradient(135deg, rgba(255,255,255,0.86), rgba(255,241,199,0.78));
             border: 1px solid rgba(255, 190, 104, 0.38);
             border-radius: 24px 24px 8px 8px;
             padding: 18px 24px;
@@ -188,11 +405,8 @@ def load_css():
             height: 18px;
         }
 
-        /* =========================
-           CARD METRIC
-        ========================= */
         .metric-card {
-            background: rgba(255, 255, 255, 0.84);
+            background: rgba(255, 255, 255, 0.86);
             backdrop-filter: blur(10px);
             padding: 24px;
             border-radius: 26px;
@@ -242,9 +456,6 @@ def load_css():
             line-height: 1.5;
         }
 
-        /* =========================
-           STATUS CARD
-        ========================= */
         .status-card {
             padding: 22px 26px;
             border-radius: 24px;
@@ -282,153 +493,9 @@ def load_css():
             color: #A23A2A;
         }
 
-        /* =========================
-           FORM TAMBAH TRANSAKSI
-        ========================= */
-        div[data-testid="stForm"] {
-            background:
-                radial-gradient(circle at top right, rgba(255, 209, 102, 0.25), transparent 28%),
-                rgba(255, 255, 255, 0.84);
-            padding: 34px;
-            border-radius: 32px;
-            box-shadow: 0 24px 55px rgba(164, 97, 19, 0.14);
-            border: 1px solid rgba(255, 181, 77, 0.38);
-            margin-top: 8px;
-        }
-
-        .form-title {
-            font-size: 24px;
-            font-weight: 850;
-            color: #2F1D05;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        .info-card {
-            padding: 22px 26px;
-            border-radius: 26px;
-            margin-bottom: 22px;
-            box-shadow: 0 18px 38px rgba(181, 111, 32, 0.10);
-            border: 1px solid rgba(255, 190, 104, 0.42);
-        }
-
-        .info-card h3 {
-            margin: 0 0 8px 0;
-            font-size: 22px;
-            color: #2F1D05;
-        }
-
-        .info-card p {
-            margin: 0;
-            color: #70501B;
-            line-height: 1.65;
-            font-size: 15px;
-        }
-
-        .income-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,241,199,0.92));
-        }
-
-        .expense-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,226,174,0.92));
-        }
-
-        /* =========================
-           INPUT, SELECT, TEXTAREA
-        ========================= */
-        label,
-        .stRadio label,
-        .stSelectbox label,
-        .stDateInput label,
-        .stNumberInput label,
-        .stTextArea label {
-            color: #4B3109 !important;
-            font-weight: 700 !important;
-            font-size: 15px !important;
-        }
-
-        div[data-testid="stRadio"] {
-            background: rgba(255, 255, 255, 0.58);
-            border: 1px solid rgba(255, 184, 77, 0.34);
-            border-radius: 22px;
-            padding: 18px 20px 10px 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 12px 28px rgba(181, 111, 32, 0.08);
-        }
-
-        div[data-baseweb="select"] > div,
-        div[data-testid="stTextInput"] input,
-        div[data-testid="stNumberInput"] input,
-        div[data-testid="stDateInput"] input,
-        textarea {
-            background-color: #FFFDF8 !important;
-            color: #2F1D05 !important;
-            border-radius: 16px !important;
-            border: 1.5px solid rgba(255, 173, 72, 0.55) !important;
-            box-shadow: 0 8px 20px rgba(180, 105, 20, 0.06) !important;
-        }
-
-        div[data-baseweb="select"] > div {
-            min-height: 52px !important;
-        }
-
-        div[data-baseweb="select"] > div:hover,
-        div[data-testid="stTextInput"] input:hover,
-        div[data-testid="stNumberInput"] input:hover,
-        div[data-testid="stDateInput"] input:hover,
-        textarea:hover {
-            border-color: rgba(255, 159, 28, 0.85) !important;
-        }
-
-        div[data-baseweb="select"] span {
-            color: #2F1D05 !important;
-            font-weight: 650 !important;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #A98243 !important;
-        }
-
-        /* =========================
-           BUTTON
-        ========================= */
-        .stButton > button,
-        .stFormSubmitButton > button {
-            background: linear-gradient(135deg, #FFB13B, #FF9F1C);
-            color: #2F1D05;
-            border: none;
-            border-radius: 18px;
-            padding: 0.85rem 1.45rem;
-            font-weight: 850;
-            font-size: 16px;
-            box-shadow: 0 14px 28px rgba(255, 159, 28, 0.28);
-            transition: all 0.2s ease;
-        }
-
-        .stButton > button:hover,
-        .stFormSubmitButton > button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 35px rgba(255, 159, 28, 0.36);
-            color: #2F1D05;
-            border: none;
-        }
-
-        .stFormSubmitButton > button {
-            min-width: 220px;
-            height: 54px;
-        }
-
-        .button-space {
-            height: 8px;
-        }
-
-        /* =========================
-           EMPTY CARD
-        ========================= */
         .empty-card,
         .content-card {
-            background: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.84);
             padding: 28px;
             border-radius: 28px;
             box-shadow: 0 18px 40px rgba(181, 111, 32, 0.12);
@@ -448,7 +515,7 @@ def load_css():
         }
 
         .soft-empty-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.76), rgba(255,241,199,0.72));
+            background: linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,241,199,0.72));
             border: 1px dashed rgba(255, 159, 28, 0.45);
             border-radius: 24px;
             padding: 30px;
@@ -473,9 +540,6 @@ def load_css():
             line-height: 1.6;
         }
 
-        /* =========================
-           RIWAYAT & TRANSAKSI CARD
-        ========================= */
         .filter-title {
             font-size: 18px;
             font-weight: 800;
@@ -484,7 +548,7 @@ def load_css():
         }
 
         .mini-stat-card {
-            background: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.84);
             border: 1px solid rgba(255, 190, 104, 0.35);
             border-radius: 22px;
             padding: 20px 24px;
@@ -507,7 +571,7 @@ def load_css():
         }
 
         .transaction-card {
-            background: rgba(255, 255, 255, 0.86);
+            background: rgba(255, 255, 255, 0.88);
             border: 1px solid rgba(255, 190, 104, 0.35);
             border-radius: 24px;
             padding: 18px 22px;
@@ -583,9 +647,6 @@ def load_css():
             color: #B45309 !important;
         }
 
-        /* =========================
-           SUMMARY
-        ========================= */
         .summary-card {
             background: rgba(255, 255, 255, 0.84);
             border: 1px solid rgba(255, 190, 104, 0.36);
@@ -619,7 +680,7 @@ def load_css():
         }
 
         .summary-list {
-            background: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.84);
             border: 1px solid rgba(255, 190, 104, 0.35);
             border-radius: 24px;
             padding: 20px;
@@ -647,18 +708,12 @@ def load_css():
             font-size: 16px;
         }
 
-        /* =========================
-           DATAFRAME
-        ========================= */
         div[data-testid="stDataFrame"] {
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 14px 30px rgba(181, 111, 32, 0.08);
         }
 
-        /* =========================
-           FOOTER
-        ========================= */
         .footer-note {
             text-align: center;
             color: #8B6A2D;
@@ -666,9 +721,6 @@ def load_css():
             margin-top: 42px;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
         @media screen and (max-width: 768px) {
             .hero-title {
                 font-size: 32px;
@@ -678,13 +730,18 @@ def load_css():
                 padding: 24px;
             }
 
+            .transaction-heading h1,
             .page-heading h1,
             .dashboard-title-card h1 {
                 font-size: 30px;
             }
 
+            div[data-testid="stTabs"] [role="tablist"] {
+                grid-template-columns: 1fr;
+            }
+
             div[data-testid="stForm"] {
-                padding: 24px;
+                padding: 26px;
             }
 
             .transaction-card {
